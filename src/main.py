@@ -2,7 +2,7 @@ import asyncio
 import logging
 import sys
 
-from rustplus import RustSocket, ServerDetails, ChatEvent, TeamEvent, EntityEvent
+from rustplus import RustSocket, ServerDetails, ChatEvent, TeamEvent, EntityEvent, RustError
 
 from src.config import load_config, ConfigError
 from src.formatter import (
@@ -34,6 +34,10 @@ async def poll_team_status(socket: RustSocket, sender: DiscordSender):
     while True:
         try:
             team_info = await socket.get_team_info()
+            if team_info is None or isinstance(team_info, RustError):
+                await asyncio.sleep(30)
+                continue
+
             if hasattr(team_info, "members"):
                 members = team_info.members
             else:
@@ -77,6 +81,9 @@ async def poll_server_info(socket: RustSocket, sender: DiscordSender):
     while True:
         try:
             info = await socket.get_info()
+            if info is None or isinstance(info, RustError):
+                await asyncio.sleep(300)
+                continue
             summary = f"{info.players}/{info.max_players}"
 
             if summary != _last_info:
