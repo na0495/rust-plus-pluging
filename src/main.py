@@ -78,14 +78,14 @@ async def poll_team_status(socket: RustSocket, sender: DiscordSender):
 
 
 async def poll_server_info(socket: RustSocket, sender: DiscordSender):
-    """Poll server info every 5 minutes and report on changes."""
+    """Poll server info every 10 minutes and report on changes."""
     _last_info = None
 
     while True:
         try:
             info = await socket.get_info()
             if info is None or isinstance(info, RustError):
-                await asyncio.sleep(300)
+                await asyncio.sleep(600)
                 continue
             summary = f"{info.players}/{info.max_players}"
 
@@ -103,7 +103,7 @@ async def poll_server_info(socket: RustSocket, sender: DiscordSender):
         except Exception as e:
             logger.error("Error polling server info: %s", e)
 
-        await asyncio.sleep(300)
+        await asyncio.sleep(600)
 
 
 async def run_bot():
