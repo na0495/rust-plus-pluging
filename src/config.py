@@ -1,3 +1,5 @@
+import os
+
 from dotenv import dotenv_values
 
 
@@ -15,7 +17,9 @@ REQUIRED_FIELDS = {
 
 
 def load_config(env_path: str = ".env") -> dict:
+    # Load from .env file first, then override with real env vars (for Docker)
     values = dotenv_values(env_path)
+    values.update({k: v for k, v in os.environ.items() if k in REQUIRED_FIELDS})
 
     config = {}
     for env_key, config_key in REQUIRED_FIELDS.items():

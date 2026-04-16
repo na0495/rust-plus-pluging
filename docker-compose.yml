@@ -1,0 +1,7 @@
+services:
+  rustplus-bot:
+    build: .
+    container_name: rustplus-bot
+    restart: unless-stopped
+    env_file:
+      - .env

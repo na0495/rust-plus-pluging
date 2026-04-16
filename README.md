@@ -63,46 +63,31 @@ RUST_PLAYER_TOKEN=your_token_here
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
 ```
 
-### 4. Install and Run
+### 4. Run with Docker Compose (Recommended)
+
+```bash
+docker compose up -d
+```
+
+That's it. The bot runs in the background and auto-restarts on failure.
+
+**View logs:**
+```bash
+docker compose logs -f
+```
+
+**Stop:**
+```bash
+docker compose down
+```
+
+### 4b. Run without Docker (Alternative)
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python -m src.main
-```
-
-The bot will connect to your Rust+ server and start forwarding events to Discord.
-
-### 5. Run 24/7 on a VPS (Optional)
-
-Using `systemd` on a Linux VPS:
-
-```bash
-sudo nano /etc/systemd/system/rustplus-bot.service
-```
-
-```ini
-[Unit]
-Description=Rust+ Discord Bot
-After=network.target
-
-[Service]
-Type=simple
-User=your_user
-WorkingDirectory=/path/to/rust
-ExecStart=/path/to/rust/venv/bin/python -m src.main
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable rustplus-bot
-sudo systemctl start rustplus-bot
 ```
 
 ## Event Examples
