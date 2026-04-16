@@ -22,44 +22,44 @@ player online/offline, deaths, and server info.
 
 ## Setup
 
-### 1. Get Your Rust+ Pairing Credentials
+### 1. Get Your FCM Credentials
 
-You need four values: **Server IP**, **Server Port**, **Steam64 ID**, and **Player Token**.
+You need FCM credentials to receive pairing notifications from Rust+.
 
-**Option A: RustPlus.py Link Companion (recommended)**
+**Step A: Register with FCM** (one-time setup, requires Node.js)
 
-1. Install the [RustPlus.py Link Companion](https://chromewebstore.google.com/detail/rustpluspy-link-companion/gojhnmnggbnflhdcpcemeahejhcimnlf) Chrome extension
-2. Open the extension and follow the instructions to link your Steam account
-3. In Rust, open the Rust+ menu and click **Pair with Server**
-4. The extension will display your server details and player token
+```bash
+npx @liamcottle/rustplus.js fcm-register
+```
 
-**Option B: From the Rust+ app**
+This opens Chrome to log in with your Steam account. Once done, it saves your FCM credentials.
 
-1. Install the Rust+ companion app on your phone
-2. Pair with your server in-game (Tool Cupboard → Pair with Server)
-3. Use a packet sniffer or the `rustplus.py` FCM listener to extract the credentials
+**Step B: Save credentials**
 
-### 2. Create a Discord Webhook
+Copy the FCM output into a file called `fcm_credentials.json` in the project root.
+
+### 2. Pair with Your Server
+
+```bash
+python pair.py
+```
+
+This starts listening for pairing notifications. Then in Rust:
+1. Go to a **Tool Cupboard** or the **Rust+ menu**
+2. Click **"Pair with Server"**
+
+The script will capture the server IP, port, your player ID, and player token, and automatically write them to your `.env` file.
+
+### 3. Create a Discord Webhook
 
 1. Open your Discord server
 2. Go to **Server Settings → Integrations → Webhooks**
 3. Click **New Webhook**
 4. Choose a name (e.g. "Rust+ Alerts") and the target channel
 5. Click **Copy Webhook URL**
-
-### 3. Configure the Bot
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your values:
+6. Add it to your `.env` file:
 
 ```
-RUST_SERVER_IP=123.456.789.0
-RUST_SERVER_PORT=28015
-RUST_PLAYER_ID=76561198000000000
-RUST_PLAYER_TOKEN=your_token_here
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
 ```
 

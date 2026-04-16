@@ -1,5 +1,7 @@
 .env
+fcm_credentials.json
 __pycache__/
 *.pyc
 .pytest_cache/
 venv/
+*.key
