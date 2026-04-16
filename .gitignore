@@ -1,5 +1,6 @@
 .env
 fcm_credentials.json
+rustplus.config.json
 __pycache__/
 *.pyc
 .pytest_cache/

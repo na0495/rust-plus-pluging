@@ -10,6 +10,7 @@ from src.formatter import (
     format_player_online,
     format_player_offline,
     format_player_death,
+    format_player_respawned,
     format_smart_alarm,
     format_server_info,
     format_connection_status,
@@ -60,10 +61,12 @@ async def poll_team_status(socket: RustSocket, sender: DiscordSender):
                 elif not is_online and was_online:
                     await sender.send(format_player_offline(name))
 
-                # Death detection
+                # Death / respawn detection
                 was_alive = _previous_alive.get(steam_id)
                 if was_alive is True and not is_alive:
                     await sender.send(format_player_death(name))
+                elif was_alive is False and is_alive:
+                    await sender.send(format_player_respawned(name))
                 _previous_alive[steam_id] = is_alive
 
             _previous_online = current_online
@@ -92,6 +95,8 @@ async def poll_server_info(socket: RustSocket, sender: DiscordSender):
                     players=info.players,
                     max_players=info.max_players,
                     map_size=info.size,
+                    wipe_time=getattr(info, "wipe_time", None),
+                    logo=getattr(info, "logo_image", None),
                 ))
                 _last_info = summary
 
